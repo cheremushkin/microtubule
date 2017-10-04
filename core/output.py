@@ -7,27 +7,33 @@ import csv
 
 
 class Output:
-    folder: ''
-    time: 0
-    current: ''
-
     def __init__(self, folder):
-        os.chdir('{}/output'.format(os.path.abspath(os.path.join('', os.pardir))))
+        os.chdir('{}/simulations'.format(os.path.abspath(os.path.join('', os.pardir))))
 
-        self.folder = '{}'.format(folder)  # folder with simulations
+        self.folder = folder  # folder with simulations
         self.time = time()  # current time
-        self.current = '{}/{}'.format(self.folder, self.time)  # destination folder for simulation
+        self.destination = str(self.time)  # destination folder for simulation
 
-        # output directory for current simulation
-        os.mkdir(self.current)
-        shutil.copyfile('{}/config.ini'.format(self.folder), '{}/config.ini'.format(self.current))  # copy config
-        os.chdir(self.current)
+        # go to output folder and create current one
+        os.chdir(self.folder)
+        os.mkdir(self.destination)
 
-    def config(self):
-        config = configparser.ConfigParser()
-        config.read('config.ini')
+        # parse config
+        self.config = configparser.ConfigParser()
+        self.config.read('config.ini')
 
-        return config
+        # go to the new folder
+        os.chdir(self.destination)
+
+    # creates config in a current folder and returns it
+    def create_сonfig(self):
+        with open('config.ini', 'w') as config:
+            self.config.write(config)
+
+        return self.config
+
+    def get_config(self):
+        return self.config
 
     def make(self, build):
         with open('data.csv', 'w') as file:

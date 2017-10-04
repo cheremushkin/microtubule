@@ -4,8 +4,7 @@ from core.output import Output
 from core.events import Events
 
 
-def start(dir):
-    out = Output(dir)
+def start(out):
     config = out.config()
     events = Events(config)
 
@@ -23,6 +22,9 @@ def start(dir):
 
 
 if __name__ == "__main__":
-    start('simulations')
+    out = Output('flat')
+    out.create_сonfig()
+
+    start(out)
 
 #print("Выполнено за {} секунд".format((stop - start)))
