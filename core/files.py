@@ -6,7 +6,7 @@ import configparser
 import csv
 
 
-class Output:
+class Files:
     def __init__(self, folder):
         os.chdir('{}/simulations'.format(os.path.abspath(os.path.join('', os.pardir))))
 
@@ -32,11 +32,14 @@ class Output:
 
         return self.config
 
+    def change_config(self, config):
+        self.config = config
+
     def get_config(self):
         return self.config
 
-    def make(self, build):
-        with open('data.csv', 'w') as file:
+    def make_csv(self, build, filename='data.cvs'):
+        with open(filename, 'w') as file:
             writer = csv.writer(file)
             [writer.writerow(r) for r in build[0]]
             writer.writerow('')

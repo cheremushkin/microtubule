@@ -1,22 +1,39 @@
-from core.output import Output
+from core.files import Files
+from core.events import Events
 import core.simulation
 
 import numpy as np
 
-def config(self):
-    print(self.config['general']['c'])
 
-Output.create_сonfig = config
+# edit Events parameter for this calibration
+def dissociation(self, x, y, hydrolysed):
+    return -np.log(np.random.random()) / float(self.config['general']['koff']), 'dissociation', x, y
+
+Events.dissociation = dissociation
+
 
 if __name__ == "__main__":
-    out = Output('gmpcpp')
-    config = out.get_config()
+    files = Files('gmpcpp')
+    config = files.get_config()
 
-    lateral_start = float(config['gtp']['lat-start'])
-    lateral_end = float(config['gtp']['lat-end'])
-    lateral_steps = int(config['gtp']['lat-steps'])
-    for i in np.linspace(lateral_start, lateral_end, num = lateral_steps):
-        print(i)
-    #out.create_сonfig()
+    # get config data
+    lateral_start = float(config['calibration']['lat-start'])
+    lateral_end = float(config['calibration']['lat-end'])
+    lateral_steps = int(config['calibration']['lat-steps'])
+    koff_start = float(config['calibration']['koff-start'])
+    koff_end = float(config['calibration']['koff-end'])
+    koff_steps = int(config['calibration']['koff-steps'])
 
-    #core.simulation.start(out)
+    # remove config data
+    config.remove_section('calibration')
+    files.change_config(config)
+    files.create_сonfig()
+
+    for i in np.linspace(lateral_start, lateral_end, num=lateral_steps):
+        config['gtp']['lat'] = str(i)
+        for j in np.linspace(koff_start, koff_end, num=koff_steps):
+            config['general']['koff'] = str(j)
+
+            files.change_config(config)
+            files.create_сonfig()
+            files.make_csv(core.simulation.build(files), '{}_{}.csv'.format(i, j))

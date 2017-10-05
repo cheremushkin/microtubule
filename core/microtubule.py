@@ -1,5 +1,7 @@
 from .monomer import Monomer
 
+import numpy as np
+
 #py.sign_in('cheremushkin', 'fsdjBUr906AXZS6CsKmT')  # Replace the username, and API key with your credentials
 
 
@@ -29,9 +31,25 @@ class Microtubule:
         self.struct = [[] for i in range(columns)]
         self.depth = depth
 
+        for x in np.arange(0, 13, 1):
+            for y in np.arange(0, 10, 2):
+                self.struct[x].append(Monomer(self, x, y, 1))
+                print(1)
+
+                self.struct[x].append(Monomer(self, x, y + 1, 2))
+                print(2)
+
+                self.struct[x][y].straighten()
+                print(3)
+
+                self.struct[x][y + 1].straighten()
+                print(4)
+
         # output data
         self.table = [[i] for i in range(columns)]
         self.data = [['time'], ['straight'], ['bent']]
+
+    #def set(self):
 
     def build(self):
         while self.time < self.timer:

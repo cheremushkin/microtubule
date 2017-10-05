@@ -1,6 +1,6 @@
 from random import random
-from math import log, exp
 
+import numpy as np
 
 """
 each event return a tuple:
@@ -13,6 +13,7 @@ and some special info
 
 class Events:
     def __init__(self, config):
+        self.config = config
         self.constants = {
             'c': float(config['general']['c']),
             'on': float(config['general']['on']),
@@ -32,22 +33,22 @@ class Events:
     
     def association(self, x, y):
         k = self.constants['c'] * self.constants['on']
-        return -log(random())/k, 'association', x, y
+        return -np.log(np.random.random()) / k, 'association', x, y
     
     def straightening(self, x, y):
         k = self.constants['str']
-        return -log(random())/k, 'straightening', x, y
+        return -np.log(np.random.random()) / k, 'straightening', x, y
     
     def dissociation(self, x, y, hydrolysed):
         c = self.constants['D'] if hydrolysed else self.constants['T']  # hydrolyzed or not
-        k = self.constants['on'] * exp(-c['long'])
-        return -log(random())/k, 'dissociation', x, y
+        k = self.constants['on'] * np.exp(-c['long'])
+        return -np.log(np.random.random()) / k, 'dissociation', x, y
     
     def bending(self, x, y, connections, hydrolysed):
         c = self.constants['D'] if hydrolysed else self.constants['T']  # hydrolyzed or not
-        k = self.constants['str'] * exp(-(c['lat'] * connections - c['bend']))
-        return -log(random())/k, 'bending', x, y
+        k = self.constants['str'] * np.exp(-(c['lat'] * connections - c['bend']))
+        return -np.log(np.random.random()) / k, 'bending', x, y
     
     def hydrolysis(self, x, y):
         k = self.constants['hydro']
-        return -log(random())/k, 'hydrolysis', x, y
+        return -np.log(np.random.random())/k, 'hydrolysis', x, y
