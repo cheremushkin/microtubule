@@ -34,16 +34,9 @@ class Microtubule:
         for x in np.arange(0, 13, 1):
             for y in np.arange(0, 10, 2):
                 self.struct[x].append(Monomer(self, x, y, 1))
-                print(1)
-
                 self.struct[x].append(Monomer(self, x, y + 1, 2))
-                print(2)
-
                 self.struct[x][y].straighten()
-                print(3)
-
                 self.struct[x][y + 1].straighten()
-                print(4)
 
         # output data
         self.table = [[i] for i in range(columns)]
