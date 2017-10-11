@@ -31,18 +31,27 @@ class Microtubule:
         self.struct = [[] for i in range(columns)]
         self.depth = depth
 
-        for x in np.arange(0, 13, 1):
-            for y in np.arange(0, 10, 2):
-                self.struct[x].append(Monomer(self, x, y, 1))
-                self.struct[x].append(Monomer(self, x, y + 1, 2))
-                self.struct[x][y].straighten()
-                self.struct[x][y + 1].straighten()
-
         # output data
         self.table = [[i] for i in range(columns)]
-        self.data = [['time'], ['straight'], ['bent']]
+        self.data = [['time'], ['straight'], ['bend']]
 
-    #def set(self):
+    # manually set the structure
+    def seed(self, seed):
+        for x in range(self.columns):
+            y = 0
+            for cell in seed[x].split(' '):
+                self.struct[x].append(Monomer(self, x, y, 1))
+                self.struct[x].append(Monomer(self, x, y + 1, 2))
+
+                if int(cell[0]):
+                    self.struct[x][y].hydrolyse()
+                    self.struct[x][y + 1].hydrolyse()
+
+                if not int(cell[1]):
+                    self.struct[x][y].straighten()
+                    self.struct[x][y + 1].straighten()
+
+                y += 2
 
     def build(self):
         while self.time < self.timer:

@@ -4,7 +4,7 @@ from core.files import Files
 from core.events import Events
 
 
-def build(files):
+def build(files, seed=False):
     config = files.get_config()
     events = Events(config)
 
@@ -15,6 +15,11 @@ def build(files):
     depth = float(config['mt']['depth'])
 
     mt = Microtubule(columns, timer, depth, fps, events)
+
+    # in some cases there could be seeded mt
+    if seed:
+        mt.seed(seed)
+
     return mt.build()
 
 

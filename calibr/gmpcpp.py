@@ -31,9 +31,19 @@ if __name__ == "__main__":
 
     for i in np.linspace(lateral_start, lateral_end, num=lateral_steps):
         config['gtp']['lat'] = str(i)
+
+        # seeded mt
+        seed = ['00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00' for i in range(int(config['mt']['protofilaments']))]
+
         for j in np.linspace(koff_start, koff_end, num=koff_steps):
             config['general']['koff'] = str(j)
 
             files.change_config(config)
             files.create_сonfig()
-            files.make_csv(core.simulation.build(files), '{}_{}.csv'.format(i, j))
+            build = core.simulation.build(files, seed)
+
+            SPEED = 100 #56250  # dimers/sec
+            if 1000 > (build[1][1][1] - build[1][2][-1]) / float(config['time']['timer']) > 50:
+                print(build[0])
+
+            #files.make_csv(core.simulation.build(files), '{}_{}.csv'.format(i, j))
