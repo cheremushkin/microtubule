@@ -2,8 +2,6 @@ from .monomer import Monomer
 
 import numpy as np
 
-#py.sign_in('cheremushkin', 'fsdjBUr906AXZS6CsKmT')  # Replace the username, and API key with your credentials
-
 
 class Microtubule:
     possible_events = []  # all current possible events
