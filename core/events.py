@@ -41,7 +41,7 @@ class Events:
     
     def dissociation(self, x, y, hydrolysed):
         c = self.constants['D'] if hydrolysed else self.constants['T']  # hydrolyzed or not
-        k = self.constants['on'] * np.exp(-c['long'])
+        k = self.constants['on'] * np.exp(-c['long']) * 10**6
         return -np.log(np.random.random()) / k, 'dissociation', x, y
     
     def bending(self, x, y, connections, hydrolysed):

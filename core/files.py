@@ -26,7 +26,7 @@ class Files:
         os.chdir(self.destination)
 
     # creates config in a current folder and returns it
-    def create_сonfig(self):
+    def create_config(self):
         with open('config.ini', 'w') as config:
             self.config.write(config)
 
@@ -44,3 +44,8 @@ class Files:
             [writer.writerow(r) for r in build[0]]
             writer.writerow('')
             [writer.writerow(r) for r in build[1]]
+
+    def make_custom_csv(self, cvs, filename='data.cvs'):
+        with open(filename, 'w') as file:
+            writer = csv.writer(file)
+            [writer.writerow(r) for r in cvs]

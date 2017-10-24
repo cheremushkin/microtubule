@@ -1,7 +1,5 @@
 class Monomer:
     def __init__(self, tube, x, y, type):
-        print('new')
-
         self.columns = tube.columns
         self.struct = tube.struct
         self.shift = 3
@@ -13,7 +11,6 @@ class Monomer:
         self.connections = 0  # monomer is bended => 0 lateral connections
 
     def straighten(self):
-        print('str')
         # previous column
         try:
             if self.x == 0:
@@ -46,8 +43,6 @@ class Monomer:
         self.bended = False
 
     def bend(self):
-        print('bnd')
-
         # left neighbour
         try:
             del self.left.right
@@ -66,7 +61,6 @@ class Monomer:
         return True
 
     def hydrolyse(self):
-        print('hydro')
 
         self.hydrolysed = True
         return True
