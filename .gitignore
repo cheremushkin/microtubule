@@ -1,3 +1,6 @@
+.gitignore
+.DS_Store
 simulations/**/
+simulations/.DS_Store
 .idea/
 core/__pycache__

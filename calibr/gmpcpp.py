@@ -57,7 +57,7 @@ if __name__ == "__main__":
             print('{}-{}, calc {}-{} finished'.format(i, j, x[i], y[j]))
             files.make_csv(build, '{}_{}.cvs'.format(i, j))
             zv[i][j] = (build[1][1][1] - build[1][2][-1]) / float(config['time']['timer'])
-            if 0.00004 < zv[i][j] < 10000:
+            if 0.0001 < zv[i][j] < 1:
                 cvs[0].append(i)
                 cvs[1].append(j)
 

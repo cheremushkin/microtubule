@@ -4,30 +4,29 @@ from core.files import Files
 from core.events import Events
 
 
-def build(files, seed=False):
+def build(files):
     config = files.get_config()
-    events = Events(config)
 
     # создание микротрубочки
-    columns = int(config['mt']['protofilaments'])
-    timer = float(config['time']['timer'])
-    fps = float(config['time']['fps'])
-    depth = float(config['mt']['depth'])
+    mt = Microtubule(
+        columns=int(config['mt']['protofilaments']),
+        timer=float(config['time']['timer']),
+        fps=float(config['time']['fps']),
+        events=Events(config),
+        mode='window',
+        window=5
+    )
 
-    mt = Microtubule(columns, timer, depth, fps, events)
-
-    # in some cases there could be seeded mt
-    if seed:
-        mt.seed(seed)
-
-    return mt.build()
+    #return
+    mt.build()
 
 
 if __name__ == "__main__":
     files = Files('flat')
-    files.create_сonfig()
+    files.get_config()
 
     # build and generate output
-    files.make_csv(build(files))
+    build(files)
+    #files.make_csv(build(files))
 
 #print("Выполнено за {} секунд".format((stop - start)))

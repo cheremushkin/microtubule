@@ -1,69 +1,24 @@
 class Monomer:
-    def __init__(self, tube, x, y, type):
-        self.columns = tube.columns
-        self.struct = tube.struct
-        self.shift = 3
-        self.x = x
-        self.y = y
+    def __init__(self, type):
         self.hydrolysed = False
-        self.type = type  # 1 - alpha, 2 - betha
         self.bended = True  # by default new monomer is bended
-        self.connections = 0  # monomer is bended => 0 lateral connections
+        self.type = type  # 1 - alpha, 2 - betha
 
     def straighten(self):
-        # previous column
-        try:
-            if self.x == 0:
-                self.left = next(e for e in reversed(self.struct[self.columns - 1]) if (not e.bended and e.y == self.y - self.shift))
-            else:
-                self.left = next(e for e in reversed(self.struct[self.x - 1]) if (not e.bended and e.y == self.y))
-
-            self.left.connections += 1
-            self.connections += 1
-        except StopIteration:
-            pass
-
-        # next column
-        try:
-            self.right = next(e for e in reversed(self.struct[self.x + 1]) if (not e.bended and e.y == self.y))
-        except StopIteration:
-            pass
-        except IndexError:
-            try:
-                self.right = next(e for e in reversed(self.struct[0]) if (not e.bended and e.y == self.y + self.shift))
-            except StopIteration:
-                pass
-
-        try:
-            self.right.connections += 1
-            self.connections += 1
-        except AttributeError:
-            pass
-
         self.bended = False
 
+        return self
+
     def bend(self):
-        # left neighbour
-        try:
-            del self.left.right
-            self.left.connections -= 1
-        except AttributeError:
-            pass
-
-        # right neighbour
-        try:
-            del self.right.left
-            self.right.connections -= 1
-        except AttributeError:
-            pass
-
+        print('bend')
         self.bended = True
-        return True
+
+        return self
 
     def hydrolyse(self):
-
         self.hydrolysed = True
-        return True
+
+        return self
 
     def __del__(self):
         return True

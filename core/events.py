@@ -33,7 +33,10 @@ class Events:
     
     def association(self, x, y):
         k = self.constants['c'] * self.constants['on']
-        return -np.log(np.random.random()) / k, 'association', x, y
+        if k > 0:
+            return -np.log(np.random.random()) / k, 'association', x, y
+        else:
+            return 1000000
     
     def straightening(self, x, y):
         k = self.constants['str']
@@ -46,7 +49,7 @@ class Events:
     
     def bending(self, x, y, connections, hydrolysed):
         c = self.constants['D'] if hydrolysed else self.constants['T']  # hydrolyzed or not
-        k = self.constants['str'] * np.exp(-(c['lat'] * connections - c['bend']))
+        k = self.constants['str'] * np.exp(-(c['lat'] * connections[0] - c['bend']))
         return -np.log(np.random.random()) / k, 'bending', x, y
     
     def hydrolysis(self, x, y):
