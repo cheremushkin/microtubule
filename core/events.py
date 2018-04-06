@@ -33,10 +33,7 @@ class Events:
     
     def association(self, x, y):
         k = self.constants['c'] * self.constants['on']
-        if k > 0:
-            return -np.log(np.random.random()) / k, 'association', x, y
-        else:
-            return 1000000
+        return -np.log(np.random.random()) / k, 'association', x, y
     
     def straightening(self, x, y):
         k = self.constants['str']

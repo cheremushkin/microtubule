@@ -1,6 +1,7 @@
 from .monomer import Monomer
 
 import numpy as np
+import operator
 
 
 class Microtubule:
@@ -32,35 +33,40 @@ class Microtubule:
         self.layers = 0
 
         # seed
+        # 2 additional layers over window are for base of mt
+        # in order to
         for x in range(self.columns):
             for y in range(self.window):
                 self.structure[x].append(Monomer(type='a').straighten())
                 self.structure[x].append(Monomer(type='b').straighten())
 
         # output data
-        #self.table = [[i] for i in range(self.columns)]
-        #self.data = [['time'], ['straight'], ['bend']]
+        self.table = [[i] for i in range(self.columns)]
+        self.data = [['time'], ['straight'], ['bend']]
 
     def build(self):
         while self.time < self.timer:
-            print()
+            #print()
             #print('before resize')
+            #print('layers: {}'.format(self.layers))
+            #print('len: {}'.format(self.layers + sum(map(lambda f: int(len(f) / 2), self.structure)) / self.columns))
+            #print('str: {}'.format(self.layers + sum(map(lambda f: int(len([e for e in f if not e.bended]) / 2), self.structure)) / self.columns))
+            #print()
+            self.resize_window()
+            print('after resize')
             print('layers: {}'.format(self.layers))
+            #print('len: {}'.format(list(map(lambda f: int(len(f) / 2), self.structure))))
+            #print('str: {}'.format(list(map(lambda f: int(len([e for e in f if not e.bended]) / 2), self.structure))))
             print('len: {}'.format(self.layers + sum(map(lambda f: int(len(f) / 2), self.structure)) / self.columns))
             print('str: {}'.format(self.layers + sum(map(lambda f: int(len([e for e in f if not e.bended]) / 2), self.structure)) / self.columns))
             print()
-            self.resize_window()
-            #print('after resize')
-            #print('len: {}'.format(list(map(lambda f: int(len(f) / 2), self.structure))))
-            #print('str: {}'.format(list(map(lambda f: int(len([e for e in f if not e.bended]) / 2), self.structure))))
-            #print()
 
             # parse events
             self.parse()
             self.time += self.possible_events[0][0]
 
             # count state and generate output
-            #self.output()
+            self.output()
 
             # invoke an event
             self.invoke()
@@ -68,7 +74,7 @@ class Microtubule:
             # clear an array of events
             self.possible_events.clear()
 
-        #return self.table, self.data
+        return self.table, self.data
 
     # check dynamic window
     def resize_window(self):
@@ -156,15 +162,17 @@ class Microtubule:
                 continue
 
             # if it exists
-            connections = 0
+            connections = [0, 0] # for dimer including all above
             y = top - 2  # of the alpha in the filament
             while y >= 0:
                 # count connections
                 alpha = self.connections(x, y)
                 betha = self.connections(x, y + 1)
+                connections[0] += alpha[0] + betha[0]
+                connections[1] += alpha[1] + betha[1]
 
                 try:
-                    self.possible_events.append(self.events.bending(x, y, (alpha[0] + betha[0], alpha[1] + betha[1]), self.structure[x][y].hydrolysed))
+                    self.possible_events.append(self.events.bending(x, y, connections, self.structure[x][y].hydrolysed))
                 except ZeroDivisionError:
                     continue
 
@@ -215,6 +223,7 @@ class Microtubule:
         self.structure[x][y + 1].straighten()
 
     def bend(self, x, y):
+        print('bend {}, {}'.format(x, int(y / 2)))
         for _y in range(y, len([e for e in self.structure[x] if not e.bended])):
             self.structure[x][_y].bend()
 
@@ -232,10 +241,7 @@ class Microtubule:
             # structure
             for j in range(self.columns):
                 string = '00 '
-                for cell in self.structure[j]:
-                    if cell.y % 2:
-                        continue
-
+                for cell in [cell for pos, cell in enumerate(self.structure[j]) if not pos % 2]:
                     string += '{}{} '.format(1 if cell.hydrolysed else 0, 1 if cell.bended else 0)
 
                 self.table[j].append(string)

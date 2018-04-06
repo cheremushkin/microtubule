@@ -10,7 +10,6 @@ class Monomer:
         return self
 
     def bend(self):
-        print('bend')
         self.bended = True
 
         return self

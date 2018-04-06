@@ -17,7 +17,6 @@ def build(files):
         window=5
     )
 
-    #return
     mt.build()
 
 
